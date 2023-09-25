@@ -2,6 +2,7 @@ from functools import cached_property
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qsl, urlparse
+from bs4 import BeautifulSoup as BS
 import re
 import redis
 import uuid 
@@ -35,6 +36,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         method = self.get_method(self.url.path)
+        print("Method", method)
         if method:
             method_name, dict_params = method
             method = getattr(self, method_name)
@@ -57,6 +59,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         session_id = self.get_book_session()
         book_recomendation = self.get_book_recomendation(session_id, book_id)
         book_page = r.get(book_id)
+        print(book_id)
         if book_page:
             self.send_response(200)
             self.send_header("Content-Type", "text/html")
@@ -85,15 +88,37 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(response.encode("utf-8"))
 
     def get_method(self, path):
+        print(path)
         for pattern, method in mapping:
             match = re.match(pattern, path)
             if match:
                 return (method, match.groupdict())
 
+    def get_search(self, *srch):
+        searchpage = r.get("search")
+        searchquery = self.url.query[5:]
+        lastadd = ""
+        for id in range(5):
+            html = r.get(id + 1).decode()
+            text = BS(html, 'html.parser').get_text()
+            if re.search(searchquery, text):
+                print("D")
+                lastadd = lastadd + f"""
+                      <h1><a href="\\books\\{id+1}"> Libro {id+1} contiene busqueda</a></h1><br>
+                      """
+        self.send_response(200)
+        self.send_header("Content-Type","text/html")
+        self.end_headers()
+        print(self.url.query)
+        response=f"""
+            {searchpage.decode()}
+            """ + lastadd
+        self.wfile.write(response.encode("utf-8"))
 
 mapping = [
             (r'^/books/(?P<book_id>\d+)$', 'get_book'),
-            (r'^/$', 'get_index')
+            (r'^/$', 'get_index'),
+            (r'^/search', 'get_search')
         ]
 
 if __name__ == "__main__":
