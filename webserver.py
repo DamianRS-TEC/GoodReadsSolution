@@ -49,5 +49,5 @@ class WebRequestHandler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     print("Server starting...")
-    server = HTTPServer(("0.0.0.0", 8000), WebRequestHandler)
+    server = HTTPServer(("0.0.0.0", 80), WebRequestHandler)
     server.serve_forever()
