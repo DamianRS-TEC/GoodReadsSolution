@@ -98,5 +98,6 @@ mapping = [
 
 if __name__ == "__main__":
     print("Server starting...")
-    server = HTTPServer(("0.0.0.0", 8000), WebRequestHandler)
+    server = HTTPServer(("0.0.0.0", 80), WebRequestHandler)
+    print("Up")
     server.serve_forever()
