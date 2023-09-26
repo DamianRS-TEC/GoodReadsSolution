@@ -1,5 +1,9 @@
 ## Proyecto 1 
 
+### Informacion de entrega
+Link del video de explicacion: https://youtu.be/TggunkVWEsE
+Proyecto de: Robledo Sanchez Damian 19211719
+
 En este primer proyecto vamos a desarrollar una applicación web sencilla
 utilizando solamente la librería estándar de python y *Redis* un almacen de
 datos en memoria.
