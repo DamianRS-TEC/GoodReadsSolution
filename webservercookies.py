@@ -102,10 +102,11 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             html = r.get(id + 1).decode()
             text = BS(html, 'html.parser').get_text()
             if re.search(searchquery, text):
-                print("D")
                 lastadd = lastadd + f"""
                       <h1><a href="\\books\\{id+1}"> Libro {id+1} contiene busqueda</a></h1><br>
                       """
+        if lastadd == "":
+            lastadd = f"""<h4>No se ha encontrado tu query</h4>"""
         self.send_response(200)
         self.send_header("Content-Type","text/html")
         self.end_headers()
