@@ -94,7 +94,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             if match:
                 return (method, match.groupdict())
 
-    def get_search(self, *srch):
+    def get_search(self):
         searchpage = r.get("search")
         searchquery = self.url.query[5:]
         lastadd = ""
@@ -110,7 +110,6 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type","text/html")
         self.end_headers()
-        print(self.url.query)
         response=f"""
             {searchpage.decode()}
             """ + lastadd
